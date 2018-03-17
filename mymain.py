@@ -6,11 +6,8 @@ Created on Sun Mar  4 14:52:34 2018
 """
 
 import sys
-import numpy as np
-import scipy.integrate
 from PyQt5 import QtGui, QtCore, QtWidgets
-import model
-import draw_n_export as graph
+import ayyy_draw as graph
 
 class YourFace(QtWidgets.QDialog):
     def __init__(self,parent=None):
