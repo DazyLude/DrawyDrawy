@@ -4,31 +4,29 @@ Created on Sun Mar  4 14:52:34 2018
 
 @author: Admin
 """
+#showcase of how to use the widget
 
 import sys
-from PyQt5 import QtGui, QtCore, QtWidgets
+from PyQt5 import QtWidgets
 import ayyy_draw as graph
 
 class YourFace(QtWidgets.QDialog):
     def __init__(self,parent=None):
         super().__init__(parent)
         self.setGeometry(50,50,1280,720)
-        self.setWindowTitle('Platelets ftw')
+        self.setWindowTitle("DrawyDrawy more like it's haaaaaa noon")
         
-        self.widget=graph.MyFace(self)
-        self.widget.setGeometry(0,0,1100,720)
-        
-        self.pbOK=QtWidgets.QPushButton(self)
-        self.pbOK.setText('click me!')
-        self.pbOK.setGeometry(1110,505,87,210)
-        self.pbOK.clicked.connect(self.onOK)
-        
-        self.widget.update()
+        self.DrawyDrawy=graph.MyFace(self)
+        self.DrawyDrawy.setGeometry(0,0,1280,720)
     
-    def onOK(self):
-        self.widget.update()
+    def resizeEvent(self, event):
+        self.DrawyDrawy.setGeometry(0,0,self.width(),self.height())
+
 
 app = QtWidgets.QApplication(sys.argv)
 w = YourFace()
+x = [0,1,2,3,4,5,6,7,8,9.]
+y = [1,2,1,5,-0.00585,7.576,4,6,3,1.]
 w.show()
+w.DrawyDrawy.putfun(x,y)
 sys.exit(app.exec_())
