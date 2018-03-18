@@ -9,6 +9,8 @@ Created on Sun Mar  4 14:56:07 2018
 
 from PyQt5 import QtGui, QtCore, QtWidgets
 import numpy as np
+import os
+from pathlib import Path
 
 #rounding abs to the needed significant figures up and down
 def rsfceil(x, sf = 2):
@@ -36,6 +38,89 @@ def smartText(QPainter, x, y, w, h, align=0, value=0):
     else:
         QPainter.drawText(QtCore.QRectF(x,y,w,h),align,'%.2f' % float(value))
 
+class YourFace(QtWidgets.QDialog):
+    def __init__(self,parent=None):
+        super().__init__(parent)
+        self.setGeometry(50,50,1280,720)
+        self.setWindowTitle("DrawyDrawy more like it's haaaaaa noon")
+        
+        self.DrawyDrawy=MyFace(self)
+        self.DrawyDrawy.setGeometry(0,0,1280,720)
+        
+        self.Scrn=QtWidgets.QPushButton(self)
+        self.Scrn.setGeometry(5,5,25,25)
+        self.Scrn.clicked.connect(self.onScrn)
+        self.Scrn.setText("s")
+        
+        self.Control=QtWidgets.QPushButton(self)
+        self.Control.setGeometry(5,30,25,25)
+        self.Control.clicked.connect(self.onControl)
+        self.Control.setText("c")
+        
+        self.con=QtWidgets.QWidget(self)
+        self.con.setWindowFlags(QtCore.Qt.Window)
+        self.con.setFixedSize(210,29)
+        self.con.setWindowTitle(" ")
+        
+        self.con.Upd=QtWidgets.QPushButton(self.con)
+        self.con.Upd.setGeometry(5,5,100,20)
+        self.con.Upd.clicked.connect(self.Upd)
+        self.con.Upd.setText("update")
+        
+        self.con.v=QtWidgets.QLineEdit(self.con)
+        self.con.v.setGeometry(106,5,49,20)
+        self.con.v.setText('10')
+        
+        self.con.h=QtWidgets.QLineEdit(self.con)
+        self.con.h.setGeometry(156,5,49,20)
+        self.con.h.setText('5')
+    
+    def resizeEvent(self, event):
+        self.DrawyDrawy.setGeometry(0,0,self.width(),self.height())
+    
+    def closeEvent(self, event):
+        self.con.close()
+        self.close()
+    
+    #Open a controller
+    def onControl(self):
+        self.con.show()
+    
+    #Updates graph
+    def Upd(self):
+        try:
+            h=float(self.con.h.text())
+            v=float(self.con.v.text())
+        except:
+            return
+        self.DrawyDrawy.hgrids=h
+        self.DrawyDrawy.vgrids=v
+        self.DrawyDrawy.update()
+    
+    #long desired screenshot button
+    def onScrn(self):
+        p = Path(os.getcwd())
+        try:
+            os.mkdir(os.getcwd()+'\screenshots')
+        except:
+            pass
+        p = Path(os.getcwd()+'\screenshots'+'\graph.png')
+        if p.exists():
+            exists=1
+            i = 1
+            while(exists):
+                p = Path(os.getcwd()+'\screenshots'+'\graph('+str(i)+').png')
+                if p.exists():
+                    i+=1
+                    print(i)
+                else:
+                    exists=0
+                    print('yay')
+            name = os.getcwd()+'\screenshots'+'\graph('+str(i)+').png'
+        else:
+            name = os.getcwd()+'\screenshots'+'\graph.png'
+        self.DrawyDrawy.grab().save(name)
+
 class MyFace(QtWidgets.QWidget):
     def __init__(self,parent=None):
         super().__init__(parent)
@@ -46,6 +131,8 @@ class MyFace(QtWidgets.QWidget):
                         [1,2,3]])
         self.gap=10
         self.BrushSize=2
+        self.vgrids=10.
+        self.hgrids=5.
     
     def putfun(self, x, y):
         if len(x) == len(y):
@@ -62,8 +149,8 @@ class MyFace(QtWidgets.QWidget):
         BS=self.BrushSize
         h=self.height()
         w=self.width()
-        hdiv=5.     #amount of horizontal grids
-        wdiv=10.    #amount of vertical grids
+        hdiv=self.hgrids    #amount of horizontal grids
+        wdiv=self.vgrids    #amount of vertical grids
         
         
         lgp = 7.5*gp        #left gap
